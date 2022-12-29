@@ -1,61 +1,61 @@
-select distinct week_number from clean_weekly_sales where week_date = '2020-06-15' and calendar_year = 2020
+SELECT DISTINCT week_number FROM clean_weekly_sales WHERE week_date = '2020-06-15' AND calENDar_year = 2020
 
--- What is the total sales for the 4 weeks before and after 2020-06-15? What is the growth or reduction rate in actual values and percentage of sales?
-drop view week_cte;
-create view week_cte as
-select calendar_year,
+-- What is the total sales for the 4 weeks before AND after 2020-06-15? What is the growth or reduction rate in actual values AND percentage of sales?
+DROP VIEW week_cte;
+create VIEW week_cte AS
+SELECT calENDar_year,
 	week_number,
-    sum(sales) as total_sales
-from clean_weekly_sales 
-group by calendar_year,week_number
+    SUM(sales) AS total_sales
+FROM clean_weekly_sales 
+GROUP BY calENDar_year,week_number
 
-with total_sales_cte as (
-select sum(case when week_number between 21 and 24 then total_sales end) as before_sales, 
-	sum(case when week_number between 25 and 28 then total_sales end) as after_sales 
-from week_cte
-where calendar_year = 2020)
-select before_sales,
+WITH total_sales_cte AS (
+SELECT SUM(CASE WHEN week_number BETWEEN 21 AND 24 THEN total_sales END) AS before_sales, 
+	SUM(CASE WHEN week_number BETWEEN 25 AND 28 THEN total_sales END) AS after_sales 
+FROM week_cte
+WHERE calENDar_year = 2020)
+SELECT before_sales,
 	after_sales,
     after_sales - before_sales AS variance, 
 	ROUND(100 * (after_sales - before_sales) / before_sales,2) AS percentage 
-from total_sales_cte
+FROM total_sales_cte
 
 
--- What about the entire 12 weeks before and after?
-with total_sales12_cte as (
-select sum(case when week_number between 13 and 24 then total_sales end) as before_sales, 
-	sum(case when week_number between 25 and 36 then total_sales end) as after_sales 
-from week_cte where calendar_year = 2020)
-select before_sales,
+-- What about the entire 12 weeks before AND after?
+WITH total_sales12_cte AS (
+SELECT SUM(CASE WHEN week_number BETWEEN 13 AND 24 THEN total_sales END) AS before_sales, 
+	SUM(CASE WHEN week_number BETWEEN 25 AND 36 THEN total_sales END) AS after_sales 
+FROM week_cte WHERE calENDar_year = 2020)
+SELECT before_sales,
 	after_sales,
     after_sales - before_sales AS variance, 
 	ROUND(100 * (after_sales - before_sales) / before_sales,2) AS percentage 
-from total_sales12_cte
+FROM total_sales12_cte
 
 
--- How do the sale metrics for these 2 periods before and after compare with the previous years in 2018 and 2019?
-with total_sales_cte as (
-select calendar_year,sum(case when week_number between 21 and 24 then total_sales end) as before_sales, 
-	sum(case when week_number between 25 and 28 then total_sales end) as after_sales 
-from week_cte
-where calendar_year in ('2018','2019')
-group by calendar_year)
-select calendar_year,
+-- How do the sale metrics for these 2 periods before AND after compare WITH the previous years in 2018 AND 2019?
+WITH total_sales_cte AS (
+SELECT calENDar_year,SUM(CASE WHEN week_number BETWEEN 21 AND 24 THEN total_sales END) AS before_sales, 
+	SUM(CASE WHEN week_number BETWEEN 25 AND 28 THEN total_sales END) AS after_sales 
+FROM week_cte
+WHERE calENDar_year IN ('2018','2019')
+GROUP BY calENDar_year)
+SELECT calENDar_year,
 	before_sales,
 	after_sales,
     after_sales - before_sales AS variance, 
 	ROUND(100 * (after_sales - before_sales) / before_sales,2) AS percentage 
-from total_sales_cte
+FROM total_sales_cte
 
-with total_sales12_cte as (
-select calendar_year,sum(case when week_number between 13 and 24 then total_sales end) as before_sales, 
-	sum(case when week_number between 25 and 36 then total_sales end) as after_sales 
-from week_cte 
-where calendar_year in ('2018','2019')
-group by calendar_year)
-select calendar_year,
+WITH total_sales12_cte as (
+SELECT calENDar_year,SUM(CASE WHEN week_number BETWEEN 13 AND 24 THEN total_sales END) AS before_sales, 
+	SUM(CASE WHEN week_number BETWEEN 25 AND 36 THEN total_sales END) AS after_sales 
+FROM week_cte 
+WHERE calENDar_year IN ('2018','2019')
+GROUP BY calENDar_year)
+SELECT calENDar_year,
 	before_sales,
 	after_sales,
     after_sales - before_sales AS variance, 
 	ROUND(100 * (after_sales - before_sales) / before_sales,2) AS percentage 
-from total_sales12_cte
+FROM total_sales12_cte
