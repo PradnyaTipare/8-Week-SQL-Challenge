@@ -7,10 +7,10 @@
 -- Ensure all null string values with an "unknown" string value in the original segment column as well as the new age_band and demographic columns
 -- Generate a new avg_transaction column as the sales value divided by transactions rounded to 2 decimal places for each record
 
-
+drop table clean_weekly_sales;
 create table clean_weekly_sales as (
 select str_to_date(week_date, '%d/%m/%Y') AS week_date,
-week(str_to_date(week_date, '%d/%m/%Y')) as week_number,
+weekofyear(str_to_date(week_date, '%d/%m/%Y')) as week_number,
 month(str_to_date(week_date, '%d/%m/%Y')) as month_number,
 year(str_to_date(week_date, '%d/%m/%Y')) as calendar_year,
 region,platform,segment,
